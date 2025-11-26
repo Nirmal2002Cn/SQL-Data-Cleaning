@@ -1,22 +1,27 @@
-# 🧹 Data Cleaning in SQL: Global Layoffs Dataset
+# 🧹 SQL Data Cleaning Project: Global Layoffs
 
 ## 📌 Project Overview
-This project demonstrates an end-to-end data cleaning process using MySQL. I took a raw, messy dataset containing global layoff statistics (2020-2023) and transformed it into a clean, standardized format suitable for exploratory data analysis (EDA).
+In this project, I cleaned a raw dataset containing global company layoffs (2020-2023) using **MySQL**. The goal was to transform messy, unstructured data into a standardized format that is ready for analysis and visualization in Business Intelligence tools like Power BI.
 
-**Goal:** To prepare the data for a Business Intelligence dashboard.
+**Key Objectives:**
+* Remove duplicate records.
+* Standardize inconsistent text (Industry names, Country names).
+* Handle `NULL` values and missing data.
+* Optimize data types for time-series analysis.
 
-## 🛠️ Skills Applied
-* **Window Functions:** Used `ROW_NUMBER()` to identify and remove duplicate entries.
-* **Data Transformation:** Used `STR_TO_DATE()` to convert text fields into usable Date formats.
-* **Self-Joins:** Applied self-joins to populate missing `Industry` values based on existing company data.
-* **String Manipulation:** Used `TRIM()` to clean inconsistent spacing and text formatting.
+## 🛠️ SQL Skills Applied
+* **Window Functions:** Used `ROW_NUMBER()` with `PARTITION BY` to identify and remove duplicate rows while preserving unique data.
+* **Data Transformation:** Utilized `STR_TO_DATE()` to convert text-based dates into standard `DATE` format.
+* **Self-Joins:** Applied self-joins to populate missing `Industry` data by referencing other records from the same company.
+* **String Manipulation:** Used `TRIM()` and `TRAILING` to clean dirty text data.
 
-## 🔍 Key Steps
-1.  **Staging:** Created a staging table (`layoffs_staging2`) to ensure the raw data remained intact.
-2.  **Deduplication:** Identified duplicates based on company, date, and location, removing 100+ duplicate rows.
-3.  **Standardization:** Fixed spelling errors (e.g., "Crypto Currency" → "Crypto") and formatting issues.
-4.  **Null Handling:** Removed rows that provided no analytical value (missing both layoff count and percentage).
+## 🔍 Process Breakdown
 
-## 📄 Source
-* Dataset: Global Layoffs Dataset (Kaggle)
-* *Based on the Data Analyst Bootcamp by Alex The Analyst.*
+### 1. Data Staging
+I created a staging table (`layoffs_staging2`) to perform cleaning operations without modifying the raw dataset. This ensures data safety and allows for error recovery.
+
+### 2. Duplicate Removal
+Using a window function, I partitioned the data by all relevant columns to flag duplicates.
+```sql
+ROW_NUMBER() OVER(
+PARTITION BY company, location, industry, ... ) AS row_num
