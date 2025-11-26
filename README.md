@@ -25,3 +25,19 @@ Using a window function, I partitioned the data by all relevant columns to flag 
 ```sql
 ROW_NUMBER() OVER(
 PARTITION BY company, location, industry, ... ) AS row_num
+Rows with row_num > 1 were deleted.
+
+3. Standardization
+Industry: Grouped variations like "Crypto Currency" and "CryptoCurrency" into a single standard category: "Crypto".
+
+Location: Removed trailing periods from country names (e.g., "United States.").
+
+Dates: Converted the string column date into a SQL DATE format to enable time-based analysis.
+
+4. Null Value Handling
+I identified companies with missing Industry values (e.g., Airbnb) and populated them by joining the table to itself and finding the correct industry from other entries for the same company.
+
+📄 Data Source
+Dataset: Global Layoffs (Kaggle)
+
+Inspiration: Adapted from the Data Analyst Bootcamp by Alex The Analyst.
