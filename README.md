@@ -1,43 +1,54 @@
-# 🧹 SQL Data Cleaning Project: Global Layoffs
+# 🧹 SQL Data Cleaning Project – Global Layoffs Dataset
 
-## 📌 Project Overview
-In this project, I cleaned a raw dataset containing global company layoffs (2020-2023) using **MySQL**. The goal was to transform messy, unstructured data into a standardized format that is ready for analysis and visualization in Business Intelligence tools like Power BI.
+## 📌 Overview
+This project focuses on cleaning and preparing the **Global Layoffs Dataset** for further analysis and dashboard creation.  
+The dataset contains layoff information reported worldwide between 2020–2023.  
+Raw data often includes duplicates, inconsistent text formatting, incorrect date formats, and missing values.  
+This project uses **MySQL** to transform the dataset into a clean, reliable, and analysis-ready table.
 
-**Key Objectives:**
-* Remove duplicate records.
-* Standardize inconsistent text (Industry names, Country names).
-* Handle `NULL` values and missing data.
-* Optimize data types for time-series analysis.
+## 👨‍💻 Author
+**Chamila Nirmal**
 
-## 🛠️ SQL Skills Applied
-* **Window Functions:** Used `ROW_NUMBER()` with `PARTITION BY` to identify and remove duplicate rows while preserving unique data.
-* **Data Transformation:** Utilized `STR_TO_DATE()` to convert text-based dates into standard `DATE` format.
-* **Self-Joins:** Applied self-joins to populate missing `Industry` data by referencing other records from the same company.
-* **String Manipulation:** Used `TRIM()` and `TRAILING` to clean dirty text data.
+---
 
-## 🔍 Process Breakdown
+## 🎯 Objectives
+The goal of this project is to:
+- Remove duplicate records
+- Standardize inconsistent text fields  
+- Convert date strings into proper `DATE` format  
+- Handle missing values appropriately  
+- Prepare the dataset for use in BI dashboards or EDA  
 
-### 1. Data Staging
-I created a staging table (`layoffs_staging2`) to perform cleaning operations without modifying the raw dataset. This ensures data safety and allows for error recovery.
+---
 
-### 2. Duplicate Removal
-Using a window function, I partitioned the data by all relevant columns to flag duplicates.
-```sql
-ROW_NUMBER() OVER(
-PARTITION BY company, location, industry, ... ) AS row_num
-Rows with row_num > 1 were deleted.
+## 🛠️ Skills Used
+- **Window Functions:** `ROW_NUMBER()` for duplicate detection  
+- **String Cleaning:** `TRIM()`, text standardization  
+- **Date Conversion:** `STR_TO_DATE()`  
+- **Self-Joins:** Filling missing values intelligently  
+- **Schema Modifications:** `ALTER TABLE`  
 
-3. Standardization
-Industry: Grouped variations like "Crypto Currency" and "CryptoCurrency" into a single standard category: "Crypto".
+---
 
-Location: Removed trailing periods from country names (e.g., "United States.").
+## 📂 Process Breakdown
 
-Dates: Converted the string column date into a SQL DATE format to enable time-based analysis.
+### ✅ 1. Remove Duplicates  
+A staging table (`layoffs_staging2`) is created where each row is assigned a `row_num` using `ROW_NUMBER()`.  
+Rows with `row_num > 1` are removed to eliminate duplicates.
 
-4. Null Value Handling
-I identified companies with missing Industry values (e.g., Airbnb) and populated them by joining the table to itself and finding the correct industry from other entries for the same company.
+### ✅ 2. Standardize Data  
+- Trim unnecessary spaces  
+- Standardize industry names (e.g., `"Crypto Currency"` → `"Crypto"`)  
+- Remove trailing dots from `country` names  
+- Convert the `date` column into `DATE` format  
 
-📄 Data Source
-Dataset: Global Layoffs (Kaggle)
+### ✅ 3. Handle Null Values  
+Self-joins are used to populate missing industries based on other records from the same company.  
+Completely empty or unhelpful rows (no `total_laid_off` and no `percentage_laid_off`) are deleted.
 
-Inspiration: Adapted from the Data Analyst Bootcamp by Alex The Analyst.
+### ✅ 4. Cleanup Columns  
+The helper column `row_num` is removed after use.
+
+---
+
+
